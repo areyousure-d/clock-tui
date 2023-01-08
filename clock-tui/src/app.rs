@@ -67,7 +67,10 @@ pub enum Mode {
         execute: Vec<String>,
     },
     /// The stopwatch mode displays the elapsed time since it was started.
-    Stopwatch,
+    Stopwatch {
+        #[clap(short, long = "wait", value_parser = parse_duration, min_values=1, default_value = "10s")]
+        wait: Duration,
+    },
     /// The countdown timer mode shows the duration to a specific time
     Countdown {
         /// The target time to countdown to, eg. "2023-01-01", "20:00", "2022-12-25 20:00:00" or "2022-12-25T20:00:00-04:00"
@@ -182,8 +185,8 @@ impl App {
                     execute.to_owned(),
                 ));
             }
-            Mode::Stopwatch => {
-                self.stopwatch = Some(Stopwatch::new(self.size, style));
+            Mode::Stopwatch { wait } => {
+                self.stopwatch = Some(Stopwatch::new(self.size, style, *wait));
             }
             Mode::Countdown {
                 time,

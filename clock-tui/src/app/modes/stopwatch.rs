@@ -14,12 +14,12 @@ pub struct Stopwatch {
 }
 
 impl Stopwatch {
-    pub(crate) fn new(size: u16, style: Style) -> Self {
+    pub(crate) fn new(size: u16, style: Style, wait: Duration) -> Self {
         Self {
             size,
             style,
             duration: Duration::zero(),
-            started_at: Some(Local::now()),
+            started_at: Some(Local::now() + wait),
         }
     }
 
