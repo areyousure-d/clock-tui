@@ -14,20 +14,30 @@ pub struct Stopwatch {
 }
 
 impl Stopwatch {
-    pub(crate) fn new(size: u16, style: Style, wait: Duration) -> Self {
+    pub(crate) fn new(size: u16, style: Style, count_down_duration: Duration) -> Self {
         Self {
             size,
             style,
             duration: Duration::zero(),
-            started_at: Some(Local::now() + wait),
+            started_at: Some(Local::now() + count_down_duration),
         }
     }
 
     pub(crate) fn total_time(&self) -> Duration {
         if let Some(start_at) = self.started_at {
             let now = Local::now();
-            self.duration + now.signed_duration_since(start_at)
+            let duration = self.duration + now.signed_duration_since(start_at);
+
+            if duration < Duration::zero() {
+                return Duration::zero() - duration;
+            }
+
+            duration
         } else {
+            if self.duration < Duration::zero() {
+                return Duration::zero() - self.duration;
+            }
+
             self.duration
         }
     }

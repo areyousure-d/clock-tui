@@ -68,8 +68,8 @@ pub enum Mode {
     },
     /// The stopwatch mode displays the elapsed time since it was started.
     Stopwatch {
-        #[clap(short, long = "wait", value_parser = parse_duration, min_values=1, default_value = "10s")]
-        wait: Duration,
+        #[clap(short = 'c', long = "count-down", value_parser = parse_duration, min_values=1, default_value = "0s")]
+        count_down_duration: Duration,
     },
     /// The countdown timer mode shows the duration to a specific time
     Countdown {
@@ -185,8 +185,10 @@ impl App {
                     execute.to_owned(),
                 ));
             }
-            Mode::Stopwatch { wait } => {
-                self.stopwatch = Some(Stopwatch::new(self.size, style, *wait));
+            Mode::Stopwatch {
+                count_down_duration,
+            } => {
+                self.stopwatch = Some(Stopwatch::new(self.size, style, *count_down_duration));
             }
             Mode::Countdown {
                 time,
